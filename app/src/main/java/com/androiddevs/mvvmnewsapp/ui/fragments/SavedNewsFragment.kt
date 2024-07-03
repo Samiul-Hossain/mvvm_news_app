@@ -7,13 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.androiddevs.mvvmnewsapp.R
+import com.androiddevs.mvvmnewsapp.adapters.NewsAdapter
 import com.androiddevs.mvvmnewsapp.ui.NewsActivity
 import com.androiddevs.mvvmnewsapp.ui.NewsViewModel
+import kotlinx.android.synthetic.main.fragment_breaking_news.paginationProgressBar
+import kotlinx.android.synthetic.main.fragment_breaking_news.rvBreakingNews
+import kotlinx.android.synthetic.main.fragment_saved_news.rvSavedNews
 
 class SavedNewsFragment: Fragment(R.layout.fragment_saved_news) {
 
     lateinit var viewModel: NewsViewModel
+    lateinit var newsAdapter: NewsAdapter
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
         Log.d(TAG, "onAttach")
@@ -38,6 +45,33 @@ class SavedNewsFragment: Fragment(R.layout.fragment_saved_news) {
         Log.d(TAG, "onViewCreated")
 
         viewModel = (activity as NewsActivity).viewModel
+        setupRecyclerView()
+
+        newsAdapter.setOnItemClickListener { article->
+            val bundle = Bundle().apply{
+                putSerializable("article", article)
+            }
+            findNavController().navigate(
+                R.id.action_savedNewsFragment_to_articleFragment,
+                bundle
+            )
+        }
+    }
+
+    private fun hideProgressBar(){
+        paginationProgressBar.visibility = View.INVISIBLE
+    }
+
+    private fun showProgressBar(){
+        paginationProgressBar.visibility = View.VISIBLE
+    }
+
+    private fun setupRecyclerView(){
+        newsAdapter = NewsAdapter()
+        rvSavedNews.apply {
+            adapter = newsAdapter
+            layoutManager = LinearLayoutManager(activity)
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
