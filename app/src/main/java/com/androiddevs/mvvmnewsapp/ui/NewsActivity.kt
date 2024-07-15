@@ -1,10 +1,9 @@
 package com.androiddevs.mvvmnewsapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.androiddevs.mvvmnewsapp.R
@@ -21,7 +20,7 @@ class NewsActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate")
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
-        val viewModelProviderFactory = NewsViewModelProviderFactory(newsRepository)
+        val viewModelProviderFactory = NewsViewModelProviderFactory(application, newsRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
         bottomNavigationView.setupWithNavController(newsNavHostFragment.findNavController())
     }
